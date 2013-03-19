@@ -19,7 +19,8 @@ public class Cluster {
 	
 	@XmlElementWrapper(name = "computadores")
 	@XmlElement(name = "computador")
-	@NotNull @Size(min = 1)
+	@NotNull 
+	@Size(min = 1)
 	private List<Computador> computadores = new ArrayList<Computador>();;
 
 	public Cluster() {}
@@ -69,5 +70,4 @@ public class Cluster {
 		Cluster that = (Cluster) obj;
 		return this.getNome().equals(that.getNome());
 	}
-
 }
