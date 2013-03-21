@@ -2,8 +2,10 @@ package exemplo.jaxrs.resource;
 
 import java.net.URI;
 import java.util.List;
+
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -14,8 +16,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
+
 import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 import org.jboss.resteasy.spi.validation.ValidateRequest;
+
 import exemplo.jaxrs.bd.ClusterDatabase;
 import exemplo.jaxrs.bd.ClusterInexistenteException;
 import exemplo.jaxrs.modelo.Cluster;
@@ -64,6 +68,7 @@ public class ClusterResource {
 		try {
 			cluster = db.getByNome(nome);
 			cluster.setAtivo(ativar);
+			db.atualizar(cluster);
 			return Response.ok(cluster).build();
 		} catch (ClusterInexistenteException e) {
 			return Response.status(Status.NOT_FOUND).build();
@@ -93,5 +98,20 @@ public class ClusterResource {
 	public Response atualizaCluster(@Valid Cluster cluster) {
 		db.atualizar(cluster);
 		return Response.ok(cluster).build();
+	}
+	
+	@DELETE
+	@Path("{nome}")
+	public Response deletaCluster(@PathParam("nome") String nome) {
+		Response response;
+		try {
+			Cluster cluster;
+			cluster = db.getByNome(nome);
+			db.remover(cluster);
+			response = Response.noContent().build();
+		} catch (ClusterInexistenteException e) {
+			response = Response.status(Status.NOT_FOUND).build();
+		}
+		return response;
 	}
 }

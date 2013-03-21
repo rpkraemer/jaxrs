@@ -149,7 +149,7 @@ public class ClusterResourceTeste {
 		Cluster cluster = clusterGetInvoc.invoke().readEntity(Cluster.class);
 		Assert.assertEquals(0, cluster.getComputadores().size());
 
-		cluster.getComputadores().add(new Computador("new-pc"));
+		cluster.adicionarComputador(new Computador("new-pc"));
 		app.path("/clusters")
 			.request()
 			.put(Entity.entity(cluster, MediaType.APPLICATION_XML))
@@ -169,7 +169,7 @@ public class ClusterResourceTeste {
 		Cluster cluster = clusterGetInvoc.invoke().readEntity(Cluster.class);
 		Assert.assertEquals(1, cluster.getComputadores().size());
 
-		cluster.getComputadores().add(new Computador("new-pc"));
+		cluster.adicionarComputador(new Computador("new-pc2"));
 		app.path("/clusters")
 			.request()
 			.put(Entity.entity(cluster, MediaType.APPLICATION_JSON))
@@ -188,6 +188,18 @@ public class ClusterResourceTeste {
 				.post(Entity.entity(cluster, MediaType.APPLICATION_XML));
 
 		Assert.assertEquals(200, resp.getStatus());
+	}
+	
+	@Test
+	public void deveDeletarUmClusterExistente() {
+		Response resp = app.path("clusters/cluster-2").request().delete();
+		Assert.assertEquals(204, resp.getStatus()); // "204 No content" - Deletado porém sem conteúdo
+	}
+	
+	@Test
+	public void deveRetornar404NotFoundAoTentarDeletarClusterInexistente() {
+		Response resp = app.path("clusters/cluster-inexistente").request().delete();
+		Assert.assertEquals(404, resp.getStatus());
 	}
 	
 	/*

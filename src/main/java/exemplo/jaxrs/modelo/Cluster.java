@@ -21,7 +21,7 @@ public class Cluster {
 	@XmlElement(name = "computador")
 	@NotNull 
 	@Size(min = 1)
-	private List<Computador> computadores = new ArrayList<Computador>();;
+	private List<Computador> computadores = new ArrayList<Computador>();
 
 	public Cluster() {}
 
